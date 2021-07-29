@@ -8,7 +8,10 @@
 
 ![image](https://user-images.githubusercontent.com/72801957/127481254-e0315d63-d151-4f0a-9968-7defe08ed0dc.png)
 
-- '/shop/' ,  methods = ['POST'])
+- '/shop/' ,  methods = ['POST']) : Thêm shop mới , gửi request là đến server là chuỗi json , nhận lại Response là thông tin shop
+*Ví dụ :
+![image](https://user-images.githubusercontent.com/72801957/127482018-e0d06fde-7c01-47e9-9284-3add0b6d10ca.png)
+
 - '/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE']
 - '/shop/<int:shop_id>/food/'  , methods = ['POST']
 - '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE']
