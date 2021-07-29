@@ -19,12 +19,20 @@
 - ![image](https://user-images.githubusercontent.com/72801957/127483110-7f6f3a22-7154-47f3-acc6-380f7b971ebe.png)
 - VD methods = DELETE
 - ![image](https://user-images.githubusercontent.com/72801957/127483291-5a27b156-31b9-4f72-9e3f-483d4e1499f5.png)
-### '/shop/<int:shop_id>/food/'  , methods = ['POST']
-### '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE']
+### '/shop/<int:shop_id>/food/'  , methods = ['POST'] : Thêm món ăn mới vào shop
+- Ví dụ
+- ![image](https://user-images.githubusercontent.com/72801957/127483822-1bee8697-0130-4952-b2fe-a04364c4ffbb.png)
+
+### '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE'] : Xem sửa xóa món ăn của shop
+- VD methods = PUT
+- ![image](https://user-images.githubusercontent.com/72801957/127484127-09dde1d8-72bb-4c97-aaad-544e9827ccf1.png)
 
 ## user order & history
 
-### '/order'  , methods = ['POST']
+### '/order'  , methods = ['POST'] : Đặt món ăn 
+- Ví dụ :
+- ![image](https://user-images.githubusercontent.com/72801957/127484696-17acdb92-752b-4169-8948-acfdbd520b0f.png)
+
 ### '/order/<int:bill_id>'  , methods = ['PUT']
 ### '/history/'  , methods = ['GET']
 ### '/history/<int:order_id>' , methods = ['GET']
