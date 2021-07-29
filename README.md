@@ -4,7 +4,7 @@
 
 
 - '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
-+Kết quả ví dụ:
++ Kết quả ví dụ:
 
 ![image](https://user-images.githubusercontent.com/72801957/127481254-e0315d63-d151-4f0a-9968-7defe08ed0dc.png)
 
