@@ -12,7 +12,10 @@
 - Ví dụ :
 ![image](https://user-images.githubusercontent.com/72801957/127482018-e0d06fde-7c01-47e9-9284-3add0b6d10ca.png)
 
-### '/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE']
+### '/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE'] : Xem sửa xóa shop ,kết quả trả về là thông tin shop đc chọn
+- VD methods = GET
+- VD methods = PUT
+- VD methods = DELETE
 ### '/shop/<int:shop_id>/food/'  , methods = ['POST']
 ### '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE']
 
