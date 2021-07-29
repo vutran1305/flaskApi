@@ -16,3 +16,8 @@
 - '/history/'  , methods = ['GET']
 - '/history/<int:order_id>' , methods = ['GET']
 - '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET']
+
+- '/statistical' , methods = ['GET']
+- '/admin/daily_order/' , methods = ['GET']
+- '/admin/all_order/' , methods = ['GET']
+- '/admin/repair_bill/<int:bill_id>' , methods = ['PUT']
