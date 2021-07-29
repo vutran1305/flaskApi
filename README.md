@@ -3,7 +3,7 @@
 #Shop & Food 
 
 
-- '/shop/' ,  , methods = ['GET']
+- '/shop/' ,  methods = ['GET']
 - '/shop/' ,  methods = ['POST'])
 - '/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE']
 - '/shop/<int:shop_id>/food/'  , methods = ['POST']
