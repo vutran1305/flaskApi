@@ -33,12 +33,15 @@
 - Ví dụ :
 - ![image](https://user-images.githubusercontent.com/72801957/127484696-17acdb92-752b-4169-8948-acfdbd520b0f.png)
 
-### '/order/<int:bill_id>'  , methods = ['PUT']
-### '/history/'  , methods = ['GET']
-### '/history/<int:order_id>' , methods = ['GET']
-### '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET']
+### '/order/<int:bill_id>'  , methods = ['PUT'] : Hủy món
+- Ví dụ
+- ![image](https://user-images.githubusercontent.com/72801957/127485469-94e68e70-042c-41d6-9001-6e80b7615f02.png)
 
-### '/statistical' , methods = ['GET']
-### '/admin/daily_order/' , methods = ['GET']
-### '/admin/all_order/' , methods = ['GET']
-### '/admin/repair_bill/<int:bill_id>' , methods = ['PUT']
+### '/history/'  , methods = ['GET'] : Xem lịch sử đặt hàng
+### '/history/<int:order_id>' , methods = ['GET'] : Xem các bill trong ngày
+### '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET'] : Xem chi tiết từng bill
+
+### '/statistical' , methods = ['GET']v: Thống kê đặt hàng trong tháng
+### '/admin/daily_order/' , methods = ['GET'] :  Xem tất cả đơn hàng các user đặt trong ngày
+### '/admin/all_order/' , methods = ['GET'] : Xem tất cả đơn hàng
+### '/admin/repair_bill/<int:bill_id>' , methods = ['PUT'] : Sửa trạng thái đơn hàng ( chưa thanh toán - > đã thanh toán và ngc lại )
