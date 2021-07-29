@@ -3,11 +3,11 @@
 #Shop & Food 
 
 
-'/shop/' ,  , methods = ['GET'])
+'/shop/' ,  , methods = ['GET']
 '/shop/' ,  methods = ['POST'])
-'/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE'])
-'/shop/<int:shop_id>/food/'  , methods = ['POST'])
-'/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE'])
+'/shop/<int:shop_id>' , methods = ['GET','PUT','DELETE']
+'/shop/<int:shop_id>/food/'  , methods = ['POST']
+'/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE']
 
 #user order & history
 
