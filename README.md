@@ -18,7 +18,7 @@
 - VD methods = PUT
 - ![image](https://user-images.githubusercontent.com/72801957/127483110-7f6f3a22-7154-47f3-acc6-380f7b971ebe.png)
 - VD methods = DELETE
-![image](https://user-images.githubusercontent.com/72801957/127483291-5a27b156-31b9-4f72-9e3f-483d4e1499f5.png)
+- ![image](https://user-images.githubusercontent.com/72801957/127483291-5a27b156-31b9-4f72-9e3f-483d4e1499f5.png)
 ### '/shop/<int:shop_id>/food/'  , methods = ['POST']
 ### '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE']
 
