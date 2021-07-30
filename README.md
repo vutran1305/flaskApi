@@ -31,7 +31,7 @@
 
 ### '/order'  , methods = ['POST'] : Đặt món ăn 
 - Ví dụ :
-- ![image](https://user-images.githubusercontent.com/72801957/127484696-17acdb92-752b-4169-8948-acfdbd520b0f.png)
+![image](https://user-images.githubusercontent.com/72801957/127623577-d0d44ae0-464f-4754-a765-f758e13915cf.png)
 
 ### '/order/<int:bill_id>'  , methods = ['PUT'] : Hủy món
 - Ví dụ
