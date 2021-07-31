@@ -30,18 +30,33 @@
 ## user order & history
 
 ### '/order'  , methods = ['POST'] : Đặt món ăn 
-- Ví dụ :
-![image](https://user-images.githubusercontent.com/72801957/127623577-d0d44ae0-464f-4754-a765-f758e13915cf.png)
-
-### '/order/<int:bill_id>'  , methods = ['PUT'] : Hủy món
+- Ví dụ đặt 1 món ăn :
+- ![image](https://user-images.githubusercontent.com/72801957/127623577-d0d44ae0-464f-4754-a765-f758e13915cf.png)
+- Ví dụ đặt 2 món ăn khác nhau:
+- ![image](https://user-images.githubusercontent.com/72801957/127749397-59038eea-7c3c-412e-b2ec-34379d749b39.png)
+### '/order/<int:order_id>'  , methods = ['PUT'] : Hủy đơn hàng
 - Ví dụ
-- ![image](https://user-images.githubusercontent.com/72801957/127485469-94e68e70-042c-41d6-9001-6e80b7615f02.png)
+- ![image](https://user-images.githubusercontent.com/72801957/127749425-a01987fb-0360-459e-97f7-b8bf4f322928.png)
 
 ### '/history/'  , methods = ['GET'] : Xem lịch sử đặt hàng
-### '/history/<int:order_id>' , methods = ['GET'] : Xem các bill trong ngày
-### '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET'] : Xem chi tiết từng bill
+- Ví dụ:
+- ![image](https://user-images.githubusercontent.com/72801957/127749459-1df53b19-04a9-4f6e-8604-16799aa0b2d3.png)
 
-### '/statistical' , methods = ['GET']v: Thống kê đặt hàng trong tháng
-### '/admin/daily_order/' , methods = ['GET'] :  Xem tất cả đơn hàng các user đặt trong ngày
+### '/history/<int:order_id>' , methods = ['GET'] : Xem thông tin đơn hàng
+- ![image](https://user-images.githubusercontent.com/72801957/127749480-07d54be3-34b1-4601-bfbd-6d84bbc5bc80.png)
+
+### '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET'] : Xem chi tiết từng bill
+- ![image](https://user-images.githubusercontent.com/72801957/127749494-9563e9a9-54bf-4bb4-abc1-f90bb4bb218a.png)
+
+### '/statistical' , methods = ['GET']: Thống kê đặt hàng trong tháng
+![image](https://user-images.githubusercontent.com/72801957/127749644-56fe63d7-42f5-4e99-8e5a-d6cfeb7c282f.png)
+- Trong đó :
+- canceled : số đơn hàng bị hủy
+- completed : Số tiền đã hoàn thành
+- pending : Số tiền còn đang thiếu
+- count : số đơn hàng đã hoàn thành
+### '/admin/daily_order/' , methods = ['GET'] :  Xem tất cả đơn hàng các user đặt trong ngày hôm nay
 ### '/admin/all_order/' , methods = ['GET'] : Xem tất cả đơn hàng
-### '/admin/repair_bill/<int:bill_id>' , methods = ['PUT'] : Sửa trạng thái đơn hàng ( chưa thanh toán - > đã thanh toán và ngc lại )
+### '/admin/repair_bill/<int:bill_id>' , methods = ['PUT'] : Sửa trạng thái bill ( chưa thanh toán - > đã thanh toán và ngc lại )
+- ![image](https://user-images.githubusercontent.com/72801957/127749875-09a322d7-9481-4495-a252-1f5a188429a2.png)
+
