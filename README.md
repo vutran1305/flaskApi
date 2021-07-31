@@ -1,7 +1,13 @@
 # flaskApi
-
-# Shop & Food 
-
+## package
+- pip install flask
+- pip install python-dotenvn
+- pip install SQLAlchemy
+- pip install marshmallow-sqlalchemy
+- pip install Flask-Migrate 
+- pip install flask_marshmallow
+- pip install -U flask-cors  
+## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
 + Kết quả ví dụ:
@@ -27,7 +33,7 @@
 - VD methods = PUT
 - ![image](https://user-images.githubusercontent.com/72801957/127484127-09dde1d8-72bb-4c97-aaad-544e9827ccf1.png)
 
-## user order & history
+
 
 ### '/order'  , methods = ['POST'] : Đặt món ăn 
 - Ví dụ đặt 1 món ăn :
