@@ -1,11 +1,10 @@
-from os import name
-from sqlalchemy import schema
+
 from app import app
 from flask import request , jsonify
 from flask.views import MethodView
 from app.models import *
 from datetime import datetime,date
-
+from sqlalchemy import func
 
 @app.route("/")
 def home():
@@ -114,14 +113,10 @@ class OrderApi(MethodView):
             bill = daily_order.bill
             daily_result = self.daily_schema.dump(daily_order)
             bill_result = self.bills_schema.dump(bill)
-            for i in bill_result:
-                i["total"] = Food.query.get(i["food_id"]).price*i["quantity"]
-                i["food_name"] = Food.query.get(i["food_id"]).name
-                i["shop"] = Food.query.get(i["food_id"]).shop.name
             daily_result["bill"] = bill_result
             return jsonify(daily_result)
         else:
-            bill  = Bill_detail.query.get(1)
+            bill  = Bill_detail.query.get(bill_id)
             return self.bill_schema.jsonify(bill)
 
 
@@ -129,59 +124,46 @@ class OrderApi(MethodView):
         
     def post(self):
         user_email = request.json['user_email']
-        order =  Daily_order.query.filter_by(user_email = user_email , date = date.today()).first()
-        print(order)
-        if order:
-            food_id =  request.json['food_id']
+        daily_order = Daily_order(user_email = user_email , pending = 0 ,completed = 0, total = 0)
+        result = []
+        for json in request.json["order"]:
+            food_id =  json['food_id']
             food = Food.query.get(food_id)
-            quantity = request.json['quantity']
-            status = request.json['status']
-            bill = Bill_detail(quantity = quantity , status = status , food = food ,daily_order = order)
-            if status == True:
-                order.completed += quantity*food.price
-            else:
-                order.pending += quantity*food.price
-            db.session.commit()
-            bill = self.bill_schema.dump(bill)
-            bill["total"] = quantity*food.price
-            bill["food_name"] = food.name
-            bill["shop"] = food.shop.name
-            return jsonify(bill)
-        else:
-            daily_order = Daily_order(user_email = user_email , pending = 0 ,completed = 0)
-            food_id =  request.json['food_id']
-            food = Food.query.get(food_id)
-            quantity = request.json['quantity']
-            status = request.json['status']
-            bill = Bill_detail(quantity = quantity , status = status , food = food ,daily_order = daily_order)
+            quantity = json['quantity']
+            status = json['status']
+            food_name = food.name
+            shop = food.shop.name
+            bill = Bill_detail(quantity = quantity , status = status , food = food ,daily_order = daily_order, food_name = food_name , shop = shop)
+            result.append(bill)
             if status == True:
                 daily_order.completed += quantity*food.price
+                daily_order.total += quantity*food.price
             else:
                 daily_order.pending += quantity*food.price
-            db.session.add(daily_order)
-            db.session.commit()
-            bill = self.bill_schema.dump(bill)
-            bill["total"] = quantity*food.price
-            bill["food_name"] = food.name
-            bill["shop"] = food.shop.name
-            return jsonify(bill)
-    def put(self,bill_id):
-        bill = Bill_detail.query.get(bill_id)
-        bill.canceled = True
-        food_id = bill.food_id
-        food = Food.query.get(food_id)
-        if bill.status == True:
-            bill.daily_order.completed -= bill.quantity*food.price
-        else:
-            bill.daily_order.pending -= bill.quantity*food.price
+                daily_order.total += quantity*food.price
+            
+        db.session.add(daily_order)
         db.session.commit()
-        bill = self.bill_schema.dump(bill)
-        bill["total"] = bill.quantity*food.price
-        bill["food_name"] = food.name
-        bill["shop"] = food.shop.name
-        return jsonify(bill)
+        result = self.bills_schema.dump(result)
+        daily_order = self.daily_schema.dump(daily_order)
+        daily_order["bills"] = result
+        return jsonify(daily_order)
+    def put(self,order_id):
+        order = Daily_order.query.get(order_id)
+        order.canceled = request.json["canceled"]
+        if order.canceled:
+            order.total = 0
+            order.completed = 0
+            order.pending = 0
+        db.session.commit()
+        return self.daily_schema.jsonify(order)
 
-
+@app.route('/test' , methods = ["GET"])
+def test():
+    data = request.json
+    
+    print(type(data))
+    return("done")
 
 #Thống kê theo tháng
 @app.route('/statistical' , methods = ['GET'])
@@ -192,26 +174,32 @@ def User_statistical():
     pending = 0
     completed = 0
     count = 0
+    canceled = 0
     for i in daily:
         if i.date.month == date.today().month:
-            pending += i.pending
-            completed += i.completed
-            count +=1
-    return jsonify({'count': count,'completed':completed,'pending':pending})
-    
+            if i.canceled != True:
+                pending += i.pending
+                completed += i.completed
+                count +=1
+            else:
+                canceled +=1
+    return jsonify({'count': count,'completed':completed,'pending':pending , "canceled":canceled})
+#admin xem tất cả order hôm nay
 @app.route('/admin/daily_order/' , methods = ['GET'])
 def daily_order():
     dailys_schema = DailySchema(many = True)
-    daily = Daily_order.query.filter_by(date = date.today()).all()
+    # daily = Daily_order.query.filter(Daily_order.date.today() == date.today()).all()
+    daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
     result = dailys_schema.dump(daily)
     return jsonify(result)
-
+#admin xem tất cả order
 @app.route('/admin/all_order/' , methods = ['GET'])
 def all_order():
     dailys_schema = DailySchema(many = True)
     daily = Daily_order.query.all()
     result = dailys_schema.dump(daily)
     return jsonify(result)
+#admin sửa trạng thái món ăn đã/chưa thanh toán
 @app.route('/admin/repair_bill/<int:bill_id>' , methods = ['PUT'])
 def repair_bill(bill_id):
     bill_schema = BillSchema()
@@ -230,19 +218,15 @@ def repair_bill(bill_id):
     db.session.commit()
     return bill_schema.jsonify(bill)
 
+@app.route('/history/canceled/' , methods = ['GET'])
+def canceled():
+    order_schema = DailySchema(many = True)
+    user = request.json["user_email"]
+    order = Daily_order.query.filter_by(user_email = user , canceled = True).all()
+    result = order_schema.dump(order)
+    return jsonify(result)
 
 
-# @app.route('/<user_email>/canceled' , methods = ['GET'])
-# def User_canceled(user_email):
-#     bills_schema = BillSchema(many =True)
-#     order = Daily_order.query.filter_by(user_email = user_email).all()
-#     result = []
-#     for i in order:
-#         for j in i.bill:
-#             if j.canceled == True:
-#                 result.append(j)
-#     kq = bills_schema.dump(result)
-#     return jsonify(kq)
 
 
 
@@ -258,7 +242,7 @@ app.add_url_rule('/shop/<int:shop_id>/food/<int:food_id>' , view_func= shop_view
 #user order & history
 order_view = OrderApi.as_view("order_api")
 app.add_url_rule('/order'  , view_func= order_view , methods = ['POST'])
-app.add_url_rule('/order/<int:bill_id>'  , view_func= order_view , methods = ['PUT'])
+app.add_url_rule('/order/<int:order_id>'  , view_func= order_view , methods = ['PUT'])
 app.add_url_rule('/history/' , defaults = {'order_id':None ,'bill_id':None}, view_func= order_view , methods = ['GET'])
 app.add_url_rule('/history/<int:order_id>' , defaults = {'bill_id':None}, view_func= order_view , methods = ['GET'])
 app.add_url_rule('/history/<int:order_id>/bill/<int:bill_id>'  , view_func= order_view , methods = ['GET'])

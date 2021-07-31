@@ -1,3 +1,3 @@
 import datetime
-x = datetime.date.today()
-print(x.month)
+x = datetime.datetime.now()
+print(x.startwith(datetime.date.today()))
