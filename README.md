@@ -47,6 +47,8 @@
 
 ### '/history/<int:order_id>/bill/<int:bill_id>'  , methods = ['GET'] : Xem chi tiết từng bill
 - ![image](https://user-images.githubusercontent.com/72801957/127749494-9563e9a9-54bf-4bb4-abc1-f90bb4bb218a.png)
+### '/history/canceled/' , methods = ['GET'] :Xem tất cả các đơn hàng đã bị hủy
+- ![image](https://user-images.githubusercontent.com/72801957/127750002-56ceef00-fb22-46ed-8319-c592fc4fa6f3.png)
 
 ### '/statistical' , methods = ['GET']: Thống kê đặt hàng trong tháng
 ![image](https://user-images.githubusercontent.com/72801957/127749644-56fe63d7-42f5-4e99-8e5a-d6cfeb7c282f.png)
