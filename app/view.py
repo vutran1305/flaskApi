@@ -5,7 +5,7 @@ from flask.views import MethodView
 from app.models import *
 from datetime import datetime,date
 from sqlalchemy import func
-
+from werkzeug.exceptions import HTTPException
 @app.route("/")
 def home():
     return jsonify({"hello":"words"})
@@ -227,8 +227,12 @@ def canceled():
     return jsonify(result)
 
 
-
-
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return jsonify(error=str(e)), code
 
 #Shop & Food 
 
