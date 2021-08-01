@@ -1,4 +1,5 @@
 # flaskApi
+- Python 3.9.0
 ## package
 - pip install flask
 - pip install python-dotenvn
