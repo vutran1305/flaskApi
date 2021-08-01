@@ -1,13 +1,13 @@
 # flaskApi
 - Python 3.9.0
 ## package
-- pip install flask
-- pip install python-dotenvn
-- pip install SQLAlchemy
-- pip install marshmallow-sqlalchemy
-- pip install Flask-Migrate 
-- pip install flask_marshmallow
-- pip install -U flask-cors  
+- flask
+- python-dotenvn
+- SQLAlchemy
+- marshmallow-sqlalchemy
+- Flask-Migrate 
+- flask_marshmallow
+-pip install -U flask-cors  
 ## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
