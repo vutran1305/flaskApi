@@ -7,7 +7,7 @@
 - marshmallow-sqlalchemy
 - Flask-Migrate 
 - flask_marshmallow
--pip install -U flask-cors  
+- flask-cors  
 ## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
