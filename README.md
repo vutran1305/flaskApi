@@ -9,7 +9,7 @@
 - flask_marshmallow
 - flask-cors 
 ## Database
--![image](https://user-images.githubusercontent.com/72801957/128155220-7f8b21bb-654b-4f3b-97ae-ba693a37540f.png)
+- ![image](https://user-images.githubusercontent.com/72801957/128155444-b87f98f7-660e-4728-a1df-67193d68a7c4.png)
 
 ## API
 
