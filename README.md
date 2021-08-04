@@ -7,7 +7,10 @@
 - marshmallow-sqlalchemy
 - Flask-Migrate 
 - flask_marshmallow
-- flask-cors  
+- flask-cors 
+## Database
+- ![image](https://user-images.githubusercontent.com/72801957/128154922-dc7c6b65-7069-4247-9a1e-9a9b3a033c8f.png)
+
 ## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
