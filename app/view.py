@@ -164,9 +164,31 @@ def test():
     
     print(type(data))
     return("done")
+@app.route('/admin/statistical/this_day' , methods = ['GET'])
+def statistical_thisday():
+    daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
+    foods = []
+    list_food = {}
+    total = 0
+    sum = 0
+    for i in daily:
+        if i.canceled == False:
+            for j in i.bill:
+                if j.food_id not in  foods:
+                    foods.append(j.food_id)
+                    list_food[j.food_id] ={"name" : j.food_name ,"quantity": j.quantity}
+                else:
+                    list_food[j.food_id]["quantity"] += j.quantity
+    for key,value in list_food.items():
+        sum += value["quantity"]
+        total += Food.query.get(key).price * value["quantity"]
+    result = {"sum": sum , "total": total  , "foods": list_food }
+    return jsonify(result)             
 
+    
+    return jsonify(result)
 #Thống kê theo tháng
-@app.route('/statistical' , methods = ['GET'])
+@app.route('/statistical/this_month' , methods = ['GET'])
 
 def User_statistical():
     user_email = request.json['user_email']
@@ -188,7 +210,6 @@ def User_statistical():
 @app.route('/admin/daily_order/' , methods = ['GET'])
 def daily_order():
     dailys_schema = DailySchema(many = True)
-    # daily = Daily_order.query.filter(Daily_order.date.today() == date.today()).all()
     daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
     result = dailys_schema.dump(daily)
     return jsonify(result)
