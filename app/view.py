@@ -196,7 +196,8 @@ def daily_order():
 @app.route('/admin/all_order/' , methods = ['GET'])
 def all_order():
     dailys_schema = DailySchema(many = True)
-    daily = Daily_order.query.all()
+    daily = Daily_order.query.order_by(Daily_order.date).all()
+    daily.reverse()
     result = dailys_schema.dump(daily)
     return jsonify(result)
 #admin sửa trạng thái món ăn đã/chưa thanh toán
@@ -225,7 +226,27 @@ def canceled():
     order = Daily_order.query.filter_by(user_email = user , canceled = True).all()
     result = order_schema.dump(order)
     return jsonify(result)
-
+    
+@app.route('/admin/statistical/this_day' , methods = ['GET'])
+def statistical_thisday():
+    daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
+    foods = []
+    list_food = {}
+    total = 0
+    sum = 0
+    for i in daily:
+        if i.canceled == False:
+            for j in i.bill:
+                if j.food_id not in  foods:
+                    foods.append(j.food_id)
+                    list_food[j.food_id] ={"name" : j.food_name ,"quantity": j.quantity}
+                else:
+                    list_food[j.food_id]["quantity"] += j.quantity
+    for key,value in list_food.items():
+        sum += value["quantity"]
+        total += Food.query.get(key).price * value["quantity"]
+    result = {"sum": sum , "total": total  , "foods": list_food }
+    return jsonify(result)       
 
 @app.errorhandler(Exception)
 def handle_error(e):
