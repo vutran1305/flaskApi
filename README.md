@@ -1,12 +1,16 @@
 # flaskApi
+- Python 3.9.0
 ## package
-- pip install flask
-- pip install python-dotenvn
-- pip install SQLAlchemy
-- pip install marshmallow-sqlalchemy
-- pip install Flask-Migrate 
-- pip install flask_marshmallow
-- pip install -U flask-cors  
+- flask
+- python-dotenvn
+- SQLAlchemy
+- marshmallow-sqlalchemy
+- Flask-Migrate 
+- flask_marshmallow
+- flask-cors 
+## Database
+- ![image](https://user-images.githubusercontent.com/72801957/128155444-b87f98f7-660e-4728-a1df-67193d68a7c4.png)
+
 ## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
