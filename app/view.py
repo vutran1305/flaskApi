@@ -6,9 +6,50 @@ from app.models import *
 from datetime import datetime,date
 from sqlalchemy import func
 from werkzeug.exceptions import HTTPException
+import uuid
+import os 
+
+UPLOAD_SHOP = './app/static/shop-pictures/'
+UPLOAD_FOOD = './app/static/food-pictures/'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['UPLOAD_SHOP'] = UPLOAD_SHOP
+app.config['UPLOAD_FOOD'] = UPLOAD_FOOD
+
+
+
+
+
 @app.route("/")
 def home():
     return jsonify({"hello":"words"})
+
+
+
+
+class ShopPictures(MethodView):
+    def get(self,filename):
+        url = '/static/shop-pictures/' + filename
+        return '<img src=' + url + '>'
+    def post(self):
+        file = request.files['file']
+        extension = os.path.splitext(file.filename)[1]
+        f_name = str(uuid.uuid4()) + extension
+        file.save(os.path.join(app.config['UPLOAD_SHOP'], f_name))
+        link = request.base_url + '/' +  f_name
+        return  link
+class FoodPictures(MethodView): 
+    def get(self,filename):
+        url = '/static/food-pictures/' + filename
+        return '<img src=' + url + '>'
+    def post(self):
+        file = request.files['file']
+        extension = os.path.splitext(file.filename)[1]
+        f_name = str(uuid.uuid4()) + extension
+        file.save(os.path.join(app.config['UPLOAD_FOOD'], f_name))
+        link = request.base_url + '/' +  f_name
+        return  link  
+
+
 
 class ShopAPI(MethodView):
     shop_schema = ShopSchema()
@@ -186,7 +227,6 @@ def statistical_thisday():
     return jsonify(result)             
 
     
-    return jsonify(result)
 #Thống kê theo tháng
 @app.route('/statistical/this_month' , methods = ['GET'])
 
@@ -256,6 +296,16 @@ def handle_error(e):
     return jsonify(error=str(e)), code
 
 #Shop & Food 
+
+
+shop_pictures = ShopPictures.as_view('shop_pictures')
+app.add_url_rule('/uploadShop/' , view_func= shop_pictures , methods = ['POST'])
+app.add_url_rule('/uploadShop/<filename>' , view_func= shop_pictures , methods = ['GET'])
+
+food_pictures = FoodPictures.as_view('food_pictures')
+app.add_url_rule('/uploadFood/' , view_func= food_pictures , methods = ['POST'])
+app.add_url_rule('/uploadFood/<filename>' , view_func= food_pictures , methods = ['GET'])
+
 
 shop_view = ShopAPI.as_view('shop_api')
 app.add_url_rule('/shop/' , defaults = {'shop_id':None,'food_id':None} , view_func= shop_view , methods = ['GET'])
