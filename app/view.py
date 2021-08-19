@@ -438,7 +438,7 @@ app.add_url_rule('/history/<int:order_id>/bill/<int:bill_id>'  , view_func= orde
 #admin consolidation order
 confirm = ConsolidationAPI.as_view('confirm')
 app.add_url_rule('/confirm/' ,defaults = {'orders_id':None,'order_id':None}, view_func= confirm , methods = ['GET'])
-app.add_url_rule('/confirm/<orders_id>' ,view_func= confirm , methods = ['POST'])
+app.add_url_rule('/confirm/' ,view_func= confirm , methods = ['POST'])
 app.add_url_rule('/confirm/<orders_id>' , defaults = {'order_id':None},view_func= confirm , methods = ['GET'])
 app.add_url_rule('/confirm/<orders_id>/order/<order_id>' , view_func= confirm , methods = ['GET'])
 
