@@ -241,11 +241,25 @@ class ConsolidationAPI(MethodView):
             result = self.consolidations_Schema.dump(consolidation)
             return jsonify(result)
         elif orders_id != None and order_id == None:
+            foods = []
+            list_food = {}
+            foods_quantity = 0
             consolidation = Order_consolidation.query.get(orders_id)
             order = consolidation.daily_order
+            for i in order :
+                for j in i.bill:
+                    if j.food_id not in  foods:
+                        foods.append(j.food_id)
+                        list_food[j.food_id] ={"name" : j.food_name ,"quantity": j.quantity}
+                    else:
+                        list_food[j.food_id]["quantity"] += j.quantity 
+            for key,value in list_food.items():
+               foods_quantity += value["quantity"]
+            add = {"foods_quantity" : foods_quantity , "list_food" : list_food }
             orders = self.orders_schema.dump(order)
             result = self.consolidationSchema.dump(consolidation)
             result["orders"] = orders
+            result.update(add)
             return jsonify(result)
         elif  orders_id != None and order_id != None:
             order = Daily_order.query.get(order_id)
@@ -383,27 +397,7 @@ def canceled():
     order = Daily_order.query.filter_by(user_email = user , canceled = True).all()
     result = order_schema.dump(order)
     return jsonify(result)
-    
-# @app.route('/admin/statistical/this_day' , methods = ['GET'])
-# def statistical_thisday():
-#     daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
-#     foods = []
-#     list_food = {}
-#     total = 0
-#     sum = 0
-#     for i in daily:
-#         if i.canceled == False:
-#             for j in i.bill:
-#                 if j.food_id not in  foods:
-#                     foods.append(j.food_id)
-#                     list_food[j.food_id] ={"name" : j.food_name ,"quantity": j.quantity}
-#                 else:
-#                     list_food[j.food_id]["quantity"] += j.quantity
-#     for key,value in list_food.items():
-#         sum += value["quantity"]
-#         total += Food.query.get(key).price * value["quantity"]
-#     result = {"sum": sum , "total": total  , "foods": list_food }
-#     return jsonify(result)       
+
 
 @app.errorhandler(Exception)
 def handle_error(e):
@@ -435,7 +429,7 @@ app.add_url_rule('/shop/<int:shop_id>/food/<int:food_id>' , view_func= shop_view
 
 #user order & history
 order_view = OrderApi.as_view("order_api")
-app.add_url_rule('/order'  , view_func= order_view , methods = ['POST'])
+app.add_url_rule('/order/'  , view_func= order_view , methods = ['POST'])
 app.add_url_rule('/order/<int:order_id>'  , view_func= order_view , methods = ['PUT'])
 app.add_url_rule('/history/' , defaults = {'order_id':None ,'bill_id':None}, view_func= order_view , methods = ['GET'])
 app.add_url_rule('/history/<int:order_id>' , defaults = {'bill_id':None}, view_func= order_view , methods = ['GET'])
@@ -443,7 +437,8 @@ app.add_url_rule('/history/<int:order_id>/bill/<int:bill_id>'  , view_func= orde
 
 #admin consolidation order
 confirm = ConsolidationAPI.as_view('confirm')
-app.add_url_rule('/confirm/' ,defaults = {'orders_id':None,'order_id':None}, view_func= confirm , methods = ['POST','GET'])
+app.add_url_rule('/confirm/' ,defaults = {'orders_id':None,'order_id':None}, view_func= confirm , methods = ['GET'])
+app.add_url_rule('/confirm/<orders_id>' ,view_func= confirm , methods = ['POST'])
 app.add_url_rule('/confirm/<orders_id>' , defaults = {'order_id':None},view_func= confirm , methods = ['GET'])
 app.add_url_rule('/confirm/<orders_id>/order/<order_id>' , view_func= confirm , methods = ['GET'])
 
