@@ -1,4 +1,5 @@
 
+from marshmallow import fields
 from app import db , ma 
 from datetime import datetime,date
 from sqlalchemy.sql.expression import Executable, ClauseElement
@@ -69,6 +70,7 @@ class Daily_order(db.Model):
     consolidation = db.Column(db.Integer , db.ForeignKey('order_consolidation.id'))
 
 class DailySchema(ma.Schema):
+    date = fields.DateTime(format='%d/%m/%Y %H:%M%z')
     class Meta:
         fields = ("id" ,"user_email" , "date" , "pending","completed" ,"canceled","total" , "confirm" ,"status" ,"confirm" , "consolidation")  
         
@@ -82,6 +84,7 @@ class Order_consolidation(db.Model):
     daily_order = db.relationship('Daily_order', backref='order_consolidation' , cascade="all, delete")
 
 class Order_consolidationSchema(ma.Schema):
+    date = fields.DateTime(format='%d/%m/%Y %H:%M%z')
     class Meta:
         fields = ("id" ,"date" ,"total")
 
@@ -92,7 +95,14 @@ class Order_consolidationSchema(ma.Schema):
 
 
 
-
+def clear():
+    db.session.query(Shop).delete()
+    db.session.query(Food).delete()
+    db.session.query(Daily_order).delete()
+    db.session.query(Bill_detail).delete()
+    db.session.query(Order_consolidation).delete()
+    db.session.commit()
+    return "done"
 
 
 

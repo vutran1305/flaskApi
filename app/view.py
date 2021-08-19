@@ -35,7 +35,7 @@ class ShopPictures(MethodView):
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + extension
         file.save(os.path.join(app.config['UPLOAD_SHOP'], f_name))
-        link = request.base_url + '/' +  f_name
+        link =  '/uploadShop/' +  f_name
         return  {  "pictures_shop" :  link }
 class FoodPictures(MethodView): 
     def get(self,filename):
@@ -46,7 +46,7 @@ class FoodPictures(MethodView):
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + extension
         file.save(os.path.join(app.config['UPLOAD_FOOD'], f_name))
-        link = request.base_url + '/' +  f_name
+        link = "/uploadFood/" +  f_name
         return  {  "pictures_food" :  link }
 
 
@@ -134,6 +134,34 @@ class ShopAPI(MethodView):
             db.session.commit()
             return self.food_schema.jsonify(food)
 
+class FoodAPI(MethodView):
+    foods_schema = FoodSchema(many = True)
+    food_schema = FoodSchema()
+    def get(self,food_id):
+        if food_id is None:
+            foods = Food.query.all()
+            result = self.foods_schema.dump(foods)
+            return jsonify(result)
+        else:
+            food = Food.query.get(food_id)
+            result = self.food_schema.dump(food)
+            return jsonify(result)
+
+    def delete(self, food_id):
+        food = Food.query.get(food_id)
+        db.session.delete(food)
+        db.session.commit()
+        return self.food_schema.jsonify(food)
+    
+    def put(self , food_id):
+        food = Food.query.get(food_id)
+        food.name = request.json['name']
+        food.price = request.json['price']
+        food.food_pictures = request.json['food_pictures']     
+        db.session.commit()
+        return self.food_schema.jsonify(food)
+
+
 
 
 
@@ -211,7 +239,6 @@ class ConsolidationAPI(MethodView):
         if orders_id is None and order_id is None:
             consolidation = Order_consolidation.query.all()
             result = self.consolidations_Schema.dump(consolidation)
-            print(result)
             return jsonify(result)
         elif orders_id != None and order_id == None:
             consolidation = Order_consolidation.query.get(orders_id)
@@ -398,3 +425,9 @@ confirm = ConsolidationAPI.as_view('confirm')
 app.add_url_rule('/confirm/' ,defaults = {'orders_id':None,'order_id':None}, view_func= confirm , methods = ['POST','GET'])
 app.add_url_rule('/confirm/<orders_id>' , defaults = {'order_id':None},view_func= confirm , methods = ['GET'])
 app.add_url_rule('/confirm/<orders_id>/order/<order_id>' , view_func= confirm , methods = ['GET'])
+
+#Food api
+
+food_view = FoodAPI.as_view('food_api')
+app.add_url_rule('/food/' , defaults = {'food_id':None} , view_func= food_view , methods = ['GET'])
+app.add_url_rule('/food/<food_id>' ,view_func= food_view , methods = ['GET','DELETE','PUT'])
