@@ -7,7 +7,10 @@
 - marshmallow-sqlalchemy
 - Flask-Migrate 
 - flask_marshmallow
-- flask-cors  
+- flask-cors 
+## Database
+- ![image](https://user-images.githubusercontent.com/72801957/128155444-b87f98f7-660e-4728-a1df-67193d68a7c4.png)
+
 ## API
 
 ### '/shop/' ,  methods = ['GET'] : Xem thông tin tất cả các shop
@@ -29,6 +32,7 @@
 ### '/shop/<int:shop_id>/food/'  , methods = ['POST'] : Thêm món ăn mới vào shop
 - Ví dụ
 - ![image](https://user-images.githubusercontent.com/72801957/127483822-1bee8697-0130-4952-b2fe-a04364c4ffbb.png)
+
 
 ### '/shop/<int:shop_id>/food/<int:food_id>' , methods = ['GET','PUT','DELETE'] : Xem sửa xóa món ăn của shop
 - VD methods = PUT
@@ -68,4 +72,6 @@
 ### '/admin/all_order/' , methods = ['GET'] : Xem tất cả đơn hàng
 ### '/admin/repair_bill/<int:bill_id>' , methods = ['PUT'] : Sửa trạng thái bill ( chưa thanh toán - > đã thanh toán và ngc lại )
 - ![image](https://user-images.githubusercontent.com/72801957/127749875-09a322d7-9481-4495-a252-1f5a188429a2.png)
+### '/admin/statistical/this_day' , methods = ['GET'] : Xem thống kê danh sách và số lượng các món ăn đã đặt hôm nay
+- ![image](https://user-images.githubusercontent.com/72801957/128323677-968a92af-0b9f-43d2-a474-23ba05bc8539.png)
 
