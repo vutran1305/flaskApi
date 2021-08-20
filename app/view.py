@@ -35,18 +35,24 @@ class ShopPictures(MethodView):
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + extension
         file.save(os.path.join(app.config['UPLOAD_SHOP'], f_name))
-        link =  '/uploadShop/' +  f_name
+        link =  '/static/shop-pictures/' +  f_name
         return  {  "pictures_shop" :  link }
 class FoodPictures(MethodView): 
     def get(self,filename):
         url = '/static/food-pictures/' + filename
+       
         return '<img src=' + url + '>'
+
+
+
+
+
     def post(self):
         file = request.files['file']
         extension = os.path.splitext(file.filename)[1]
         f_name = str(uuid.uuid4()) + extension
         file.save(os.path.join(app.config['UPLOAD_FOOD'], f_name))
-        link = "/uploadFood/" +  f_name
+        link = "/static/food-pictures/" +  f_name
         return  {  "pictures_food" :  link }
 
 
