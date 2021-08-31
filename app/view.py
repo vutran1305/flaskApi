@@ -318,7 +318,7 @@ class ConsolidationAPI(MethodView):
         return jsonify(result)
         
 
-@app.route('/admin/statistical/today' , methods = ['GET'])
+@app.route('/admin/statistical/today/' , methods = ['GET'])
 def statistical_thisday():
     daily = db.session.query(Daily_order).filter(func.DATE(Daily_order.date) == date.today())
     foods = []
@@ -341,7 +341,7 @@ def statistical_thisday():
 
     
 #User xem thống kê theo tháng
-@app.route('/statistical/month' , methods = ['GET'])
+@app.route('/statistical/' , methods = ['POST'])
 
 def User_statistical():
     user_email = request.json['user_email']
@@ -396,7 +396,40 @@ def repair_bill(order_id):
     db.session.commit()
     return order_schema.jsonify(order)
 
-@app.route('/history/canceled/' , methods = ['GET'])
+
+
+
+
+
+class HistoryAPI(MethodView):
+    bill_schema = BillSchema()
+    bills_schema = BillSchema(many=True)
+    daily_schema = DailySchema()
+    dailys_schema = DailySchema(many= True) 
+    def post(self,order_id , bill_id ):
+        user_email = request.json['user_email']
+        if order_id is None and bill_id is None :
+            daily_order = Daily_order.query.filter_by(user_email = user_email).all()
+            print(daily_order)
+            result = self.dailys_schema.dump(daily_order)
+            return jsonify(result)
+        elif order_id and bill_id is None:
+            daily_order = Daily_order.query.get(order_id)
+            print(daily_order.date.month)
+            bill = daily_order.bill
+            daily_result = self.daily_schema.dump(daily_order)
+            bill_result = self.bills_schema.dump(bill)
+            daily_result["bill"] = bill_result
+            return jsonify(daily_result)
+        else:
+            bill  = Bill_detail.query.get(bill_id)
+            return self.bill_schema.jsonify(bill)
+
+
+
+
+
+@app.route('/history/canceled/' , methods = ['POST'])
 def canceled():
     order_schema = DailySchema(many = True)
     user = request.json["user_email"]
@@ -405,12 +438,30 @@ def canceled():
     return jsonify(result)
 
 
+
+
+
+
 @app.errorhandler(Exception)
 def handle_error(e):
     code = 500
     if isinstance(e, HTTPException):
         code = e.code
     return jsonify(error=str(e)), code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #Shop & Food 
 
@@ -435,11 +486,12 @@ app.add_url_rule('/shop/<int:shop_id>/food/<int:food_id>' , view_func= shop_view
 
 #user order & history
 order_view = OrderApi.as_view("order_api")
+history_view = HistoryAPI.as_view("history_api")
 app.add_url_rule('/order/'  , view_func= order_view , methods = ['POST'])
 app.add_url_rule('/order/<int:order_id>'  , view_func= order_view , methods = ['PUT'])
-app.add_url_rule('/history/' , defaults = {'order_id':None ,'bill_id':None}, view_func= order_view , methods = ['GET'])
-app.add_url_rule('/history/<int:order_id>' , defaults = {'bill_id':None}, view_func= order_view , methods = ['GET'])
-app.add_url_rule('/history/<int:order_id>/bill/<int:bill_id>'  , view_func= order_view , methods = ['GET'])
+app.add_url_rule('/history/' , defaults = {'order_id':None ,'bill_id':None}, view_func= history_view , methods = ['POST'])
+app.add_url_rule('/history/<int:order_id>' , defaults = {'bill_id':None}, view_func= history_view , methods = ['POST'])
+app.add_url_rule('/history/<int:order_id>/bill/<int:bill_id>'  , view_func= history_view , methods = ['POST'])
 
 #admin consolidation order
 confirm = ConsolidationAPI.as_view('confirm')
