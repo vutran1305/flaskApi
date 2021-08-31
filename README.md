@@ -57,7 +57,7 @@
 ### '/history/canceled/' , methods = ['GET'] :Xem tất cả các đơn hàng đã bị hủy
 - ![image](https://user-images.githubusercontent.com/72801957/127750002-56ceef00-fb22-46ed-8319-c592fc4fa6f3.png)
 
-### '/statistical' , methods = ['GET']: Thống kê đặt hàng trong tháng
+### '/statistical/' , methods = ['POST']: Thống kê đặt hàng trong tháng
 ![image](https://user-images.githubusercontent.com/72801957/127749644-56fe63d7-42f5-4e99-8e5a-d6cfeb7c282f.png)
 - Trong đó :
 - order_canceled : số đơn hàng bị hủy
